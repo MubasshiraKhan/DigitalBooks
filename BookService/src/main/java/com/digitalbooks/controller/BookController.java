@@ -1,6 +1,7 @@
 package com.digitalbooks.controller;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,19 +24,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.digitalbooks.exceptions.BookAlreadyExistsException;
 import com.digitalbooks.exceptions.ErrorResponse;
 import com.digitalbooks.model.Book;
+import com.digitalbooks.model.User;
+import com.digitalbooks.repository.BookRepository;
 import com.digitalbooks.service.BookCreationService;
 import com.digitalbooks.utilities.UserURIConstants;
 import com.digitalbooks.message.ResponseMessage;
 
 @RestController
+@RequestMapping("/api/v1/digitalbooks/")
 public class BookController
 {
 
-	// creating a logger
-	Logger logger= LoggerFactory.getLogger(BookController .class);
+	
+	Logger logger= LoggerFactory.getLogger(BookController.class);
 	@Autowired
 	BookCreationService bookService;
-
+	@Autowired
+	BookRepository repo;
 
 
 	@GetMapping(value=UserURIConstants.BookSearch)
@@ -95,5 +101,30 @@ public class BookController
 	{
 		return new ErrorResponse(HttpStatus.CONFLICT.value(),
 				ex.getMessage());
+	}
+	@PostMapping("/author/{authorId}/books/{bookId}/block")
+	public ResponseEntity<?> blockAndUnBlockBook(@PathVariable Long authorId,@PathVariable Long bookId,@RequestParam String block) {
+		boolean blockStatus = true;
+		User user = bookService.getUserById(authorId);
+		Book book = repo.findByIdAndAuthorname(bookId,user.getUsername());
+		if(Objects.isNull(book)) {
+			return ResponseEntity
+					.badRequest()
+					.body(new ResponseMessage("Error: Book Not Found!",false));
+		}
+		if(block.equalsIgnoreCase("yes")) 
+			blockStatus = false;
+		if(book.getIsActive() == blockStatus) {
+			return ResponseEntity
+					.badRequest()
+					.body(new ResponseMessage("Error: Book is already blocked!",false));
+		}
+		book.setIsActive(blockStatus);
+		repo.save(book);
+		if(!blockStatus) {
+			return ResponseEntity.ok(new ResponseMessage("Book Blocked!",true));
+		} else {
+			return ResponseEntity.ok(new ResponseMessage("Book Un-Blocked!",true));
+		}
 	}
 }

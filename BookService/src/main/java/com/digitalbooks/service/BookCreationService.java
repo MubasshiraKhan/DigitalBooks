@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.digitalbooks.exceptions.BookAlreadyExistsException;
 import com.digitalbooks.exceptions.NoSuchBookExistsException;
 import com.digitalbooks.model.Book;
+import com.digitalbooks.model.User;
 import com.digitalbooks.repository.BookRepository;
 
 @Service
@@ -34,7 +36,7 @@ public List<Book> getBooksByParam(String Title,String category,String author,int
 {
 	List<Book> book = new ArrayList<Book>();
 	bookRepository.findAll().forEach(books ->{ 
-		if(books.getBook_title().equalsIgnoreCase(Title) && books.getAuthor_id().equalsIgnoreCase(author)
+		if(books.getBook_title().equalsIgnoreCase(Title) && books.getAuthor_name().equalsIgnoreCase(author)
 				&& (books.getPrice()==price) && books.getPublisher().equalsIgnoreCase( publisher))
 		book.add(books);
 		});
@@ -93,4 +95,13 @@ else {
     return "Record updated Successfully";
 }
 }
+
+@Autowired
+RestTemplate restTemplate;
+
+public User getUserById(long authorId) {
+	return restTemplate.getForObject("http://localhost:8000/api/vi/digitalbooks/userDetailsById/"+authorId,User.class);
+}
+
+
 }
