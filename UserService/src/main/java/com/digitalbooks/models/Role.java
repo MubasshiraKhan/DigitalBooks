@@ -13,10 +13,9 @@ public class Role {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 20)
 	private ERole name;
-	private int is_active;
-
 	
-
+	
+	
 	public Integer getRole_id() {
 		return id;
 	}
@@ -25,13 +24,6 @@ public class Role {
 		this.id = role_id;
 	}
 
-	public int getIs_active() {
-		return is_active;
-	}
-
-	public void setIs_active(int is_active) {
-		this.is_active = is_active;
-	}
 
 	public Role() {
 
@@ -48,4 +40,7 @@ public class Role {
 	public void setName(ERole name) {
 		this.name = name;
 	}
+
+	
+	
 }

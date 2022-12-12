@@ -8,8 +8,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
-
 @Entity
 @Table(	name = "users", 
 		uniqueConstraints = { 
@@ -24,36 +22,42 @@ public class User {
 	@NotBlank
 	@Size(max = 20)
 	private String username;
-    @NotBlank
-	@Size(max = 120)
-	private String password;
-    @NotBlank
+	@NotBlank
 	@Size(max = 50)
 	@Email
 	private String email;
+    @NotBlank
+	@Size(max = 120)
+	private String password;
+    
+  	
+	private long phone_no; 
+	//private int role_id ;
+	private char is_active='Y' ;
 	
-	private int phone_no; 
-	private int role_id ;
-	private char is_active ;
+	
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(	name = "user_roles", 
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	
 	private Set<Role> roles = new HashSet<>();
 
 	
 	
-	public User(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 120) String password,
-			@NotBlank @Size(max = 50) @Email String email, int phone_no, int role_id, char is_active) {
+	public User(String username,String email, String password,
+			long phone_no) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.phone_no = phone_no;
-		this.role_id = role_id;
-		this.is_active = is_active;
-		
+		}
+
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {
@@ -96,22 +100,13 @@ public class User {
 		this.roles = roles;
 	}
 
-	public int getPhone_no() {
+	public long getPhone_no() {
 		return phone_no;
 	}
 
-	public void setPhone_no(int phone_no) {
+	public void setPhone_no(long phone_no) {
 		this.phone_no = phone_no;
 	}
-
-	public int getRole_id() {
-		return role_id;
-	}
-
-	public void setRole_id(int role_id) {
-		this.role_id = role_id;
-	}
-
 	public char getIs_active() {
 		return is_active;
 	}
@@ -119,5 +114,16 @@ public class User {
 	public void setIs_active(char is_active) {
 		this.is_active = is_active;
 	}
+
+	
+
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password
+				+ ", phone_no=" + phone_no + ", is_active=" + is_active + ", roles=" + roles
+				+ "]";
+	}
+	
 	
 }

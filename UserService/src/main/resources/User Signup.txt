@@ -1,0 +1,17 @@
+//JSON for signup request
+{"id":"101", 
+"email":"Jack@gmail.com", 
+"is_active":"Y", 
+"password":"jack1234", 
+"phone_no":"876543", 
+"role_id":"2", 
+"username":"Jack"
+
+}
+
+////JSON for signup request
+{
+    "username":"Jack",
+"password":"jack1234"
+
+}

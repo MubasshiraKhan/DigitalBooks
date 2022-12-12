@@ -3,6 +3,8 @@ package com.digitalbooks.payload.request;
 import java.util.Set;
 
 import javax.validation.constraints.*;
+
+import com.digitalbooks.models.Role;
  
 public class SignupRequest {
     @NotBlank
@@ -16,31 +18,27 @@ public class SignupRequest {
     
     private Set<String> role;
     
+    private long roleid;
+    
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
     
-    private int phone_no; 
-	private int role_id ;
+    private long phone_no; 
+	
 	private char is_active ;
 	
 	
 	
-    public int getPhone_no() {
+    public long getPhone_no() {
 		return phone_no;
 	}
 
-	public void setPhone_no(int phone_no) {
+	public void setPhone_no(long phone_no) {
 		this.phone_no = phone_no;
 	}
 
-	public int getRole_id() {
-		return role_id;
-	}
-
-	public void setRole_id(int role_id) {
-		this.role_id = role_id;
-	}
+	
 
 	public char getIs_active() {
 		return is_active;
@@ -81,4 +79,14 @@ public class SignupRequest {
     public void setRole(Set<String> role) {
       this.role = role;
     }
+
+	public long getRoleid() {
+		return roleid;
+	}
+
+	public void setRoleid(long roleid) {
+		this.roleid = roleid;
+	}
+
+	
 }
